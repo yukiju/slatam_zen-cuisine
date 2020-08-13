@@ -28,9 +28,6 @@ public class DaoTest {
 			roles.add(new Role(0, "admin"));
 			roles.add(new Role(0, "manager"));
 			roles.add(new Role(0, "user"));
-			roles.add(new Role(0, "owner"));
-			roles.add(new Role(0, "jockey"));
-			roles.add(new Role(0, "gambler"));
 
 			roles.forEach(e -> {
 				rDao.addNewRole(e);
