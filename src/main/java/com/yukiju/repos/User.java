@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(schema = "zencuisine", name = "users")
+@Table(name = "users")
 public class User {
 
 	@Id

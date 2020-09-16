@@ -1,14 +1,24 @@
 package com.yukiju.utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+
 import org.apache.log4j.Logger;
 
+import com.yukiju.daos.BrandDao;
+import com.yukiju.daos.CategoryDao;
+import com.yukiju.daos.ProductDao;
+import com.yukiju.daos.RetailerDao;
 import com.yukiju.daos.RoleDao;
 import com.yukiju.daos.UserDao;
+import com.yukiju.repos.Brand;
+import com.yukiju.repos.Category;
+import com.yukiju.repos.Product;
+import com.yukiju.repos.Retailer;
 import com.yukiju.repos.Role;
 import com.yukiju.repos.User;
 
@@ -19,6 +29,79 @@ public class DaoTest {
 	 */
 
 	static Logger logger = Logger.getRootLogger();
+	
+	static void dummyProducts() {
+		ProductDao pDao = DaoUtil.getProductDao();
+		
+		if (pDao.getAllProducts().isEmpty()) {
+			RetailerDao retDao = DaoUtil.getRetailerDao();
+			Retailer ret = retDao.selectByRetailer("econo");
+			Product pro = new Product(0,"00070893800511",1
+					, "Cheese Spread", "Cheese"
+					, "Cheaper than cheeze wiz", "oz"
+					, LocalDateTime.now(), LocalDateTime.now(), 60, 2.79, 0);
+			pro.setRetailer(ret);
+			pDao.addNewProduct(pro);
+			/*
+			RetailerDao retDao = DaoUtil.getRetailerDao();
+			List<Product> products = new ArrayList<Product>();
+			List<Retailer> retailers = new ArrayList<Retailer>();
+			//retailers.add(new Retailer(0,"Econo"));
+			retDao.addNewRetailer(new Retailer(0,"Econo"));
+			products.add(new Product(0,"00070893800511",1
+					, "Cheese Spread", "Cheese"
+					, "Cheaper than cheeze wiz", "oz"
+					, LocalDateTime.now(), LocalDateTime.now(), 60, 2.79, 0));
+			products.forEach(e -> {
+				pDao.addNewProduct(e);
+			});*/
+		}
+	}
+	
+	static void dummyRetailers() {
+		RetailerDao retDao = DaoUtil.getRetailerDao();
+		
+		if (retDao.getAllRetailers().isEmpty()) {
+			List<Retailer> retailers = new ArrayList<Retailer>();
+			retailers.add(new Retailer(0,"Walmart"));
+			retailers.add(new Retailer(0, "Costco"));
+			retailers.add(new Retailer(0,"Econo"));
+			
+			retailers.forEach(e -> {
+				retDao.addNewRetailer(e);
+			});
+		}
+	}
+	
+	static void dummyBrands() {
+		BrandDao bDao = DaoUtil.getBrandDao();
+		
+		if (bDao.getAllBrands().isEmpty()) {
+			List<Brand> brands = new ArrayList<Brand>();
+			brands.add(new Brand(0, "Prima"));
+			brands.add(new Brand(0, "Top Ramen"));
+			
+			brands.forEach(e -> {
+				bDao.addNewBrand(e);
+			});
+		}
+	}
+	
+	static void dummyCategories() {
+		CategoryDao cDao = DaoUtil.getCategoryDao();
+		
+		if (cDao.getAllCategories().isEmpty()) {
+			List<Category> categories = new ArrayList<Category>();
+			categories.add(new Category(0, "Fruits"));
+			categories.add(new Category(0, "Vegetables"));
+			categories.add(new Category(0, "Grains"));
+			categories.add(new Category(0, "Nuts"));
+			
+			categories.forEach(e -> {
+				cDao.addNewCategory(e);
+			});
+		}
+	}
 
 	static void dummyRoles() {
 		RoleDao rDao = DaoUtil.getRoleDao();
@@ -56,7 +139,7 @@ public class DaoTest {
 			logger.warn("Role " + user.getRole() + " already exists.");
 		}
 
-		DaoUtil.closeSessionFactory();
+		// DaoUtil.closeSessionFactory();
 	}
 
 	public static void userQueryTest() {
@@ -72,8 +155,14 @@ public class DaoTest {
 			user.setFirstName("new");
 			user.setLastName("user");
 		}
+		
 		User user4 = new User(0, "user2", "user2@email.com", "password", "user", "two", null);
-		uDao.addNewUser(user4);
+		Optional<User> username4 = Optional.ofNullable(uDao.selectUserByUsername(user4.getUsername()));
+		if (!username4.isPresent()) {
+			uDao.addNewUser(user4);
+		} else {
+			logger.warn("Username " + user4.getUsername() + " already exists.");
+		}
 
 		Optional<User> username = Optional.ofNullable(uDao.selectUserByUsername(user.getUsername()));
 		if (!username.isPresent()) {
@@ -106,12 +195,18 @@ public class DaoTest {
 			System.out.println(u);
 		}
 
-		DaoUtil.closeSessionFactory();
+		// DaoUtil.closeSessionFactory();
 	}
 
 	public static void main(String[] args) {
-		dummyRoles();
-		userQueryTest();
+		
+		//dummyRoles();
+		//userQueryTest();
+		//dummyCategories();
+		//dummyBrands();
+		//dummyRetailers();
+		dummyProducts();
+		DaoUtil.closeSessionFactory();
 
 	}
 
