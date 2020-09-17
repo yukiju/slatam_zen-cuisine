@@ -13,6 +13,8 @@ import com.yukiju.daos.BrandDao;
 import com.yukiju.daos.BrandDaoImpl;
 import com.yukiju.daos.CategoryDao;
 import com.yukiju.daos.CategoryDaoImpl;
+import com.yukiju.daos.FoodTypeDao;
+import com.yukiju.daos.FoodTypeDaoImpl;
 import com.yukiju.daos.ProductDao;
 import com.yukiju.daos.ProductDaoImpl;
 import com.yukiju.daos.RecipeDao;
@@ -28,6 +30,7 @@ import com.yukiju.daos.UserDaoImpl;
 import com.yukiju.repos.Account;
 import com.yukiju.repos.Brand;
 import com.yukiju.repos.Category;
+import com.yukiju.repos.FoodType;
 import com.yukiju.repos.Product;
 import com.yukiju.repos.Recipe;
 import com.yukiju.repos.Retailer;
@@ -55,6 +58,7 @@ public class DaoUtil {
 	private static RecipeDaoImpl recipeDaoImpl = null;
 	private static StorageDaoImpl storageDaoImpl = null;
 	private static ProductDaoImpl productDaoImpl = null;
+	private static FoodTypeDaoImpl foodTypeDaoImpl = null;
 	
 	public static CategoryDao getCategoryDao() {
 		if (categoryDaoImpl == null) {
@@ -98,6 +102,13 @@ public class DaoUtil {
 		return productDaoImpl;
 	}
 	
+	public static FoodTypeDao getFoodTypeDao() {
+		if (foodTypeDaoImpl == null) {
+			foodTypeDaoImpl = new FoodTypeDaoImpl();
+		}
+		return foodTypeDaoImpl;
+	}
+	
 	public static UserDao getUserDao() {
 		if (userDaoImpl == null) {
 			userDaoImpl = new UserDaoImpl();
@@ -136,7 +147,8 @@ public class DaoUtil {
 						.addAnnotatedClass(Recipe.class)
 						.addAnnotatedClass(Storage.class)
 						.addAnnotatedClass(Product.class)
-						.addAnnotatedClass(Retailer.class);
+						.addAnnotatedClass(Retailer.class)
+						.addAnnotatedClass(FoodType.class);
 
 				registry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 

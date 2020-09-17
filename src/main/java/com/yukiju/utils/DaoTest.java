@@ -11,12 +11,14 @@ import org.apache.log4j.Logger;
 
 import com.yukiju.daos.BrandDao;
 import com.yukiju.daos.CategoryDao;
+import com.yukiju.daos.FoodTypeDao;
 import com.yukiju.daos.ProductDao;
 import com.yukiju.daos.RetailerDao;
 import com.yukiju.daos.RoleDao;
 import com.yukiju.daos.UserDao;
 import com.yukiju.repos.Brand;
 import com.yukiju.repos.Category;
+import com.yukiju.repos.FoodType;
 import com.yukiju.repos.Product;
 import com.yukiju.repos.Retailer;
 import com.yukiju.repos.Role;
@@ -30,6 +32,24 @@ public class DaoTest {
 
 	static Logger logger = Logger.getRootLogger();
 	
+	static void dummyFoodTypes() {
+		FoodTypeDao ftDao = DaoUtil.getFoodTypeDao();
+		
+		if (ftDao.getAllFoodTypes().isEmpty()) {
+			List<FoodType> foodTypes = new ArrayList<FoodType>();
+			foodTypes.add(new FoodType(0, "Grains"));
+			foodTypes.add(new FoodType(0, "Seeds"));
+			foodTypes.add(new FoodType(0, "Vegetables"));
+			foodTypes.add(new FoodType(0, "Fruits"));
+			
+			foodTypes.forEach(e -> {
+				ftDao.addNewFoodType(e);
+			});
+			
+		}
+		
+	}
+	
 	static void dummyProducts() {
 		ProductDao pDao = DaoUtil.getProductDao();
 		
@@ -37,7 +57,7 @@ public class DaoTest {
 			RetailerDao retDao = DaoUtil.getRetailerDao();
 			Retailer ret = retDao.selectByRetailer("econo");
 			Product pro = new Product(0,"00070893800511",1
-					, "Cheese Spread", "Cheese"
+					, "Cheese Spread"
 					, "Cheaper than cheeze wiz", "oz"
 					, LocalDateTime.now(), LocalDateTime.now(), 60, 2.79, 0);
 			pro.setRetailer(ret);
@@ -56,6 +76,26 @@ public class DaoTest {
 				pDao.addNewProduct(e);
 			});*/
 		}
+	}
+	
+	static void productsCrud() {
+		ProductDao pDao = DaoUtil.getProductDao();
+		RetailerDao retDao = DaoUtil.getRetailerDao();
+		Product pro = new Product(0,"00070893800511",1
+				, "CetresssdddsSSsddsefffs"
+				, "Cheaper than cheeze wiz", "oz"
+				, LocalDateTime.now(), LocalDateTime.now(), 60, 2.79, 0);
+		List<Retailer> retailers = new ArrayList<Retailer>();
+		retailers.add(new Retailer(1, "Walmart"));
+		retailers.add(new Retailer(2, "Costco"));
+		pro.setRetailers(retailers);
+		pDao.addNewProduct(pro);
+		logger.info("inside main BEFORE sf close");
+		logger.info("product");
+		logger.info(pro);
+		Retailer retailer = new Retailer();
+		retailer = retDao.selectByRetailer("Econo");
+		pDao.addRetailerToProduct(pro, retailer);
 	}
 	
 	static void dummyRetailers() {
@@ -205,7 +245,10 @@ public class DaoTest {
 		//dummyCategories();
 		//dummyBrands();
 		//dummyRetailers();
-		dummyProducts();
+		//productsCrud();
+		//dummyProducts();
+		dummyFoodTypes();
+		
 		DaoUtil.closeSessionFactory();
 
 	}

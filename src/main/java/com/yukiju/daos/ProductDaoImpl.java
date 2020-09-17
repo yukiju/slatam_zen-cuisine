@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.yukiju.repos.Product;
+import com.yukiju.repos.Retailer;
 import com.yukiju.utils.DaoUtil;
 
 public class ProductDaoImpl implements ProductDao {
@@ -59,6 +60,49 @@ public class ProductDaoImpl implements ProductDao {
 				logger.error(e.toString());
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	@Override
+	public void addRetailerToProduct(Product product, Retailer retailer) {
+		Optional<Product> sameProduct = getProduct(product.getId());
+		if (sameProduct.isPresent()) {
+			List<Retailer> retailers = new ArrayList<Retailer>();
+			Boolean theSame = null;
+			retailers = product.getRetailers();
+			if (!retailers.isEmpty()) {
+				for (Retailer ret : retailers) {
+					theSame = retailer.getRetailer().equalsIgnoreCase(ret.getRetailer());
+				}
+				if (theSame == false) {
+					retailers.add(retailer);
+					product.setRetailers(retailers);
+					logger.info("RETAILER IS NOT THE SAME");
+					try (Session session = sf.openSession()) {
+						Transaction tx = session.beginTransaction();
+						product = (Product) session.merge(product);
+						tx.commit();
+						logger.info("Updated product: "+ product.getProduct());
+					}
+				}
+			}						
+		} else {
+			logger.warn(product + " not found.");
+		}
+	}
+	
+	@Override
+	public void updateProduct(Product product) {
+		Optional<Product> sameProduct = getProduct(product.getId());
+		if (sameProduct.isPresent()) {
+			try (Session session = sf.openSession()) {
+				Transaction tx = session.beginTransaction();
+				product = (Product) session.merge(product);
+				tx.commit();
+				logger.info("Updated product: "+ product.getProduct());
+			}
+		} else {
+			logger.warn(product + " not found.");
 		}
 	}
 

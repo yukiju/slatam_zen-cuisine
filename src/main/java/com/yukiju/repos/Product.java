@@ -35,7 +35,7 @@ public class Product {
 	@NotBlank(message = "Must provide a product name")
 	@Column(unique = true, nullable = false)
 	private String product;
-	private String type;
+
 	private String notes;
 
 	@Column(name = "measure_unit")
@@ -59,6 +59,10 @@ public class Product {
 	private double weight;
 
 	@ManyToOne
+	@JoinColumn(name = "foodType_id")
+	private FoodType foodType;
+
+	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
 
@@ -72,9 +76,9 @@ public class Product {
 
 	@Transient
 	private Retailer retailer;
-	
+
 	@ManyToMany
-	@JoinTable(name="retailers_products", joinColumns = { @JoinColumn(name = "product_id") }, inverseJoinColumns = {
+	@JoinTable(name = "retailers_products", joinColumns = { @JoinColumn(name = "product_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "retailer_id") })
 	private List<Retailer> retailers;
 
@@ -110,12 +114,12 @@ public class Product {
 		this.product = product;
 	}
 
-	public String getType() {
-		return type;
+	public FoodType getType() {
+		return foodType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setFoodType(FoodType type) {
+		this.foodType = type;
 	}
 
 	public String getNotes() {
@@ -208,7 +212,7 @@ public class Product {
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + quantityPurchased;
 		result = prime * result + shelfLife;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((foodType == null) ? 0 : foodType.hashCode());
 		result = prime * result + ((upc == null) ? 0 : upc.hashCode());
 		temp = Double.doubleToLongBits(weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -257,10 +261,10 @@ public class Product {
 			return false;
 		if (shelfLife != other.shelfLife)
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (foodType == null) {
+			if (other.foodType != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!foodType.equals(other.foodType))
 			return false;
 		if (upc == null) {
 			if (other.upc != null)
@@ -275,9 +279,9 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", upc=" + upc + ", quantityPurchased=" + quantityPurchased + ", product="
-				+ product + ", type=" + type + ", notes=" + notes + ", measureUnit=" + measureUnit + ", datePurchased="
-				+ datePurchased + ", expirationDate=" + expirationDate + ", shelfLife=" + shelfLife + ", price=" + price
-				+ ", weight=" + weight + "]";
+				+ product + ", foodType=" + foodType + ", notes=" + notes + ", measureUnit=" + measureUnit
+				+ ", datePurchased=" + datePurchased + ", expirationDate=" + expirationDate + ", shelfLife=" + shelfLife
+				+ ", price=" + price + ", weight=" + weight + "]";
 	}
 
 	public Product(int id, @NotBlank(message = "Must provide a product name") String product,
@@ -289,7 +293,34 @@ public class Product {
 	}
 
 	public Product(int id, String upc, int quantityPurchased,
-			@NotBlank(message = "Must provide a product name") String product, String type, String notes,
+			@NotBlank(message = "Must provide a product name") String product, String notes, String measureUnit,
+			LocalDateTime datePurchased, LocalDateTime expirationDate, int shelfLife, @PositiveOrZero double price,
+			@PositiveOrZero double weight) {
+		super();
+		this.id = id;
+		this.upc = upc;
+		this.quantityPurchased = quantityPurchased;
+		this.product = product;
+		this.notes = notes;
+		this.measureUnit = measureUnit;
+		this.datePurchased = datePurchased;
+		this.expirationDate = expirationDate;
+		this.shelfLife = shelfLife;
+		this.price = price;
+		this.weight = weight;
+	}
+
+	public Product(int id, @NotBlank(message = "Must provide a product name") String product,
+			LocalDateTime datePurchased, FoodType foodType) {
+		super();
+		this.id = id;
+		this.product = product;
+		this.datePurchased = datePurchased;
+		this.foodType = foodType;
+	}
+
+	public Product(int id, String upc, int quantityPurchased,
+			@NotBlank(message = "Must provide a product name") String product, FoodType type, String notes,
 			String measureUnit, LocalDateTime datePurchased, LocalDateTime expirationDate, int shelfLife,
 			@PositiveOrZero double price, @PositiveOrZero double weight) {
 		super();
@@ -297,7 +328,7 @@ public class Product {
 		this.upc = upc;
 		this.quantityPurchased = quantityPurchased;
 		this.product = product;
-		this.type = type;
+		this.foodType = type;
 		this.notes = notes;
 		this.measureUnit = measureUnit;
 		this.datePurchased = datePurchased;
@@ -308,7 +339,27 @@ public class Product {
 	}
 
 	public Product(int id, String upc, int quantityPurchased,
-			@NotBlank(message = "Must provide a product name") String product, String type, String notes,
+			@NotBlank(message = "Must provide a product name") String product, FoodType type, String notes,
+			String measureUnit, LocalDateTime datePurchased, LocalDateTime expirationDate, int shelfLife,
+			@PositiveOrZero double price, @PositiveOrZero double weight, Retailer retailer) {
+		super();
+		this.id = id;
+		this.upc = upc;
+		this.quantityPurchased = quantityPurchased;
+		this.product = product;
+		this.foodType = type;
+		this.notes = notes;
+		this.measureUnit = measureUnit;
+		this.datePurchased = datePurchased;
+		this.expirationDate = expirationDate;
+		this.shelfLife = shelfLife;
+		this.price = price;
+		this.weight = weight;
+		this.retailer = retailer;
+	}
+
+	public Product(int id, String upc, int quantityPurchased,
+			@NotBlank(message = "Must provide a product name") String product, FoodType type, String notes,
 			String measureUnit, LocalDateTime datePurchased, LocalDateTime expirationDate, int shelfLife,
 			@PositiveOrZero double price, @PositiveOrZero double weight, List<Retailer> retailers) {
 		super();
@@ -316,7 +367,7 @@ public class Product {
 		this.upc = upc;
 		this.quantityPurchased = quantityPurchased;
 		this.product = product;
-		this.type = type;
+		this.foodType = type;
 		this.notes = notes;
 		this.measureUnit = measureUnit;
 		this.datePurchased = datePurchased;
