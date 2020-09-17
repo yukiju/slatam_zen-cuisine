@@ -17,7 +17,7 @@ public interface FoodTypeDao {
 	
 	void updateFoodType(FoodType foodType);
 
-	FoodType selectByFoodType(String upc) throws NoResultException;
+	FoodType selectByFoodType(String foodType) throws NoResultException;
 
 	Optional<FoodType> getFoodType(int id);
 

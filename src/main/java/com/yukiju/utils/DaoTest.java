@@ -15,6 +15,7 @@ import com.yukiju.daos.FoodTypeDao;
 import com.yukiju.daos.ProductDao;
 import com.yukiju.daos.RetailerDao;
 import com.yukiju.daos.RoleDao;
+import com.yukiju.daos.StorageDao;
 import com.yukiju.daos.UserDao;
 import com.yukiju.repos.Brand;
 import com.yukiju.repos.Category;
@@ -82,7 +83,7 @@ public class DaoTest {
 		ProductDao pDao = DaoUtil.getProductDao();
 		RetailerDao retDao = DaoUtil.getRetailerDao();
 		Product pro = new Product(0,"00070893800511",1
-				, "CetresssdddsSSsddsefffs"
+				, "CddsSddsefffs"
 				, "Cheaper than cheeze wiz", "oz"
 				, LocalDateTime.now(), LocalDateTime.now(), 60, 2.79, 0);
 		List<Retailer> retailers = new ArrayList<Retailer>();
@@ -96,6 +97,17 @@ public class DaoTest {
 		Retailer retailer = new Retailer();
 		retailer = retDao.selectByRetailer("Econo");
 		pDao.addRetailerToProduct(pro, retailer);
+		FoodTypeDao ftDao = DaoUtil.getFoodTypeDao();
+		pro.setFoodType(ftDao.selectByFoodType("Grains"));
+		pDao.updateProduct(pro);
+		CategoryDao cDao = DaoUtil.getCategoryDao();
+		pro.setCategory(cDao.selectByCategory("Fruits"));
+		pDao.updateProduct(pro);
+		BrandDao bDao = DaoUtil.getBrandDao();
+		StorageDao sDao = DaoUtil.getStorageDao();
+		pro.setBrand(bDao.selectByBrand("Prima"));
+		pro.setStoragePlace(sDao.selectByStorage("Pantry"));
+		pDao.updateProduct(pro);
 	}
 	
 	static void dummyRetailers() {
@@ -245,9 +257,9 @@ public class DaoTest {
 		//dummyCategories();
 		//dummyBrands();
 		//dummyRetailers();
-		//productsCrud();
+		productsCrud();
 		//dummyProducts();
-		dummyFoodTypes();
+		//dummyFoodTypes();
 		
 		DaoUtil.closeSessionFactory();
 

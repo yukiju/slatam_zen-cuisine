@@ -114,7 +114,7 @@ public class Product {
 		this.product = product;
 	}
 
-	public FoodType getType() {
+	public FoodType getFoodType() {
 		return foodType;
 	}
 
@@ -184,6 +184,30 @@ public class Product {
 
 	public void setWeight(double weight) {
 		this.weight = weight;
+	}
+
+	public Brand getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
+	public Storage getStoragePlace() {
+		return storagePlace;
+	}
+
+	public void setStoragePlace(Storage storagePlace) {
+		this.storagePlace = storagePlace;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public Retailer getRetailer() {

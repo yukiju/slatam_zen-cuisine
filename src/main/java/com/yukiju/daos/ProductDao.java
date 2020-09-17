@@ -15,7 +15,7 @@ public interface ProductDao {
 	
 	List<Product> getAllProducts();
 
-	void addNewProduct(Product product) throws PersistentObjectException;
+	Product addNewProduct(Product product) throws PersistentObjectException;
 	
 	void updateProduct(Product product);
 

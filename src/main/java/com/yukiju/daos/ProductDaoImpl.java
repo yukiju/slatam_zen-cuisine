@@ -47,7 +47,7 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public void addNewProduct(Product product) throws PersistentObjectException {
+	public Product addNewProduct(Product product) throws PersistentObjectException {
 		if (!product.getProduct().isEmpty()) {
 			try (Session session = sf.openSession()) {
 				Transaction tx = session.beginTransaction();
@@ -61,6 +61,7 @@ public class ProductDaoImpl implements ProductDao {
 				e.printStackTrace();
 			}
 		}
+		return product;
 	}
 	
 	@Override
